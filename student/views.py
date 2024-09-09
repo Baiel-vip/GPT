@@ -39,7 +39,12 @@ def create_student(request):
         form = StudentForm()
         return render(request, 'student/create_student.html', {'form': form})
 
-def delete_student(request, pk):
-    student = Student.objects.get(pk=pk)
-    student.delete()
-    return redirect('students-list')
+def delete_student(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('list-student')
+    else:
+        form = StudentForm()
+        return render(request, 'student/delete_student.html', {'form': form})
